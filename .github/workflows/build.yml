@@ -1,4 +1,4 @@
-name: Build Yocto Project Image
+name: Build Yocto Project Images
 
 on:
   push:
