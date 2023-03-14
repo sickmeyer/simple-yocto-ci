@@ -1,0 +1,31 @@
+name: Build Yocto Project Image
+
+on:
+  push:
+    branches:
+      - main
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        machine: [qemuarm64, qemux86-64, qemuarm]
+    container:
+      image: crops/yocto:ubuntu-20.04-base
+      env:
+        MACHINE: ${{ matrix.machine }}
+    steps:
+      - name: Clone Poky
+        run: |
+          git clone https://git.yoctoproject.org/poky
+          cd poky
+          git checkout -t origin/kirkstone
+      - name: Build Image
+        run: |
+          source poky/oe-init-build-env
+          bitbake core-image-sato
